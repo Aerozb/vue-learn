@@ -14,7 +14,6 @@
     v-cloak先通过样式隐藏内容，然后在内存中进行值的替换，将替换的内容再反馈给界面，数据渲染完场之后，v-cloak 属性会被自动去除。
     -->
     <div id="app" v-cloak>
-        {{list.length}}
         <div v-if="list.length">
             <table>
                 <thead>
@@ -28,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item,index) in list">
+                    <tr v-for="(item,index) in list" :key="item.id">
                         <td></td>
                         <td>{{item.id}}</td>
                         <td>{{item.date}}</td>
