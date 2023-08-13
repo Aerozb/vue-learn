@@ -48,10 +48,13 @@ const app = new Vue({
   },
   computed: {
     totalPrice() {
-      let totalPrice = 0;
-      this.list.forEach((item) => {
-        totalPrice += item.price;
-      });
+      // let totalPrice = 0;
+      // this.list.forEach((item) => {
+      //   totalPrice += item.price;
+      // });
+      let totalPrice = this.list.reduce((preValue, curVale) => {
+        return preValue + curVale;
+      }, 0);
       return this.showPrice(totalPrice);
     },
   },
