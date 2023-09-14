@@ -3,15 +3,13 @@
     :title="highScore.title"
     :subtitle="highScore.subtitle"
   ></AreaHeader>
-  <template v-for="item in highScore.list" :key="item.id" >
-    <img :src="item.picture_url" alt="">
-  </template>
+<RoomArea :highScore="highScore"></RoomArea>
 </template>
 
 <script setup>
 import highScore from "./data/high_score.json";
 import AreaHeader from "./components/AreaHeader.vue";
-console.log(highScore);
+import RoomArea from "./components/RoomArea.vue";
 </script>
 
 <style lang="less" scoped>
