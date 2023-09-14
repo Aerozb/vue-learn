@@ -3,10 +3,8 @@
     :title="highScore.title"
     :subtitle="highScore.subtitle"
   ></AreaHeader>
-  <<template v-for="item in highScore.list" :key="item.id" >
-    <div>
-      
-    </div>
+  <template v-for="item in highScore.list" :key="item.id" >
+    <img :src="item.picture_url" alt="">
   </template>
 </template>
 
