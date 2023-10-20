@@ -13,7 +13,6 @@ const useCityStore = defineStore("city", {
     async fetchAllCitiesData() {
       const res = await getCityAll()
       this.allCities = res.data
-      console.log(this.allCities.cityGroup);
     }
   }
 })
