@@ -1,10 +1,13 @@
 <template>
-  <div class="location">
-    <div class="city" @click="cityClick">{{ cityStore.currentCity.cityName }}</div>
-    <div class="position" @click="positionClick">
-      <span class="text">我的位置</span>
-      <img src="@/assets/img/home/icon_location.png" alt="" />
-    </div>    
+  <div class="search-box">
+    <!-- 位置信息 -->
+    <div class="location bottom-gray-line ">
+      <div class="city" @click="cityClick">{{ currentCity.cityName }}</div>
+      <div class="position" @click="positionClick">
+        <span class="text">我的位置</span>
+        <img src="@/assets/img/home/icon_location.png" alt="">
+      </div>
+    </div>
 
     <!-- 日期范围 -->
     <div class="section date-range bottom-gray-line " @click="showCalendar = true">
@@ -22,14 +25,8 @@
         </div>
       </div>
     </div>
-    <van-calendar 
-      v-model:show="showCalendar"
-      type="range"
-      color="#ff9854"
-      :round="false"
-      :show-confirm="false"
-      @confirm="onConfirm" 
-    />
+    <van-calendar v-model:show="showCalendar" type="range" color="#ff9854" :round="false" :show-confirm="false"
+      @confirm="onConfirm" />
 
     <!-- 价格/人数选择 -->
     <div class="section price-counter bottom-gray-line">
@@ -42,13 +39,14 @@
     <!-- 热门建议 -->
     <div class="section hot-suggests">
       <template v-for="(item, index) in hotSuggests" :key="index">
-        <div 
-          class="item"
-          :style="{ color: item.tagText.color, background: item.tagText.background.color }"
-        >
+        <div class="item" :style="{ color: item.tagText.color, background: item.tagText.background.color }">
           {{ item.tagText.text }}
         </div>
       </template>
+    </div>
+    <!-- 搜索按钮 -->
+    <div class="section search-btn">
+      <div class="btn" @click="searchBtnClick">开始搜索</div>
     </div>
   </div>
 </template>
@@ -61,20 +59,36 @@ import { useRouter } from 'vue-router';
 import useHomeStore from "@/stores/modules/home"
 import { formatMonthDay, getDiffDays } from "@/utils/format_date"
 
-const router = useRouter();
-const cityStore = useCityStore();
 
+const router = useRouter()
+
+// 定义Props
+// defineProps({
+//   hotSuggests: {
+//     type: Array,
+//     default: () => []
+//   }
+// })
+
+
+// 位置/城市
 const cityClick = () => {
-  router.push("/city");
-};
+  router.push("/city")
+}
 
 const positionClick = () => {
-  navigator.geolocation.getCurrentPosition((position) => {
-    var lat = position.coords.latitude;
-    var long = position.coords.longitude;
-    console.log("Latitude: " + lat + "<br>Longitude: " + long);
-  });
-};
+  navigator.geolocation.getCurrentPosition(res => {
+    console.log("获取位置成功:", res)
+  }, err => {
+    console.log("获取位置失败:", err)
+  }, {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  })
+}
+const cityStore = useCityStore()
+const { currentCity } = storeToRefs(cityStore)
 
 
 // 日期范围的处理
@@ -101,6 +115,19 @@ const onConfirm = (value) => {
 // 热门建议
 const homeStore = useHomeStore()
 const { hotSuggests } = storeToRefs(homeStore)
+
+// 开始搜索
+const searchBtnClick = () => {
+  router.push({
+    path: "/search",
+    query: {
+      startDate: startDate.value,
+      endDate: endDate.value,
+      currentCity: currentCity.value.cityName
+    }
+  })
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -180,6 +207,7 @@ const { hotSuggests } = storeToRefs(homeStore)
 
 .date-range {
   height: 44px;
+
   .stay {
     flex: 1;
     text-align: center;
@@ -190,12 +218,13 @@ const { hotSuggests } = storeToRefs(homeStore)
 
 .price-counter {
   .start {
-    border-right: 1px solid  var(--line-color);
+    border-right: 1px solid var(--line-color);
   }
 }
 
 .hot-suggests {
   margin: 10px 0;
+  height: auto;
 
   .item {
     padding: 4px 8px;
@@ -206,4 +235,19 @@ const { hotSuggests } = storeToRefs(homeStore)
   }
 }
 
+.search-btn {
+  .btn {
+    width: 342px;
+    height: 38px;
+    max-height: 50px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 20px;
+    color: #fff;
+    background-image: var(--theme-linear-gradient);
+  }
+}
 </style>
+
